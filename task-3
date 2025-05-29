@@ -1,0 +1,51 @@
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Middleware to parse JSON requests
+app.use(express.json());
+
+let books = []; // In-memory storage for books
+
+// GET all books
+app.get('/books', (req, res) => {
+    res.json(books);
+});
+
+// POST a new book
+app.post('/books', (req, res) => {
+    const { id, title, author } = req.body;
+    if (!id || !title || !author) {
+        return res.status(400).json({ message: 'ID, Title, and Author are required' });
+    }
+    books.push({ id, title, author });
+    res.status(201).json({ message: 'Book added successfully' });
+});
+
+// PUT - Update a book by ID
+app.put('/books/:id', (req, res) => {
+    const { id } = req.params;
+    const { title, author } = req.body;
+
+    const bookIndex = books.findIndex(book => book.id == id);
+    if (bookIndex === -1) {
+        return res.status(404).json({ message: 'Book not found' });
+    }
+
+    if (title) books[bookIndex].title = title;
+    if (author) books[bookIndex].author = author;
+
+    res.json({ message: 'Book updated successfully' });
+});
+
+// DELETE - Remove a book by ID
+app.delete('/books/:id', (req, res) => {
+    const { id } = req.params;
+    books = books.filter(book => book.id != id);
+    res.json({ message: 'Book deleted successfully' });
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
