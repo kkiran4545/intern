@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Styled Contact Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Contact Us</h2>
+    <form onsubmit="ff(event)">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" required></textarea><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+<script>
+    function ff(event) {
+        event.preventDefault();
+        
+        const a = document.getElementById('name');
+        const b = document.getElementById('email');
+        const c = document.getElementById('message');
+
+        let form = new FormData();
+        form.append("a", a.value);
+        form.append("b", b.value);
+        form.append("c", c.value);
+
+const jsonData = JSON.stringify(Object.fromEntries(form.entries()));
+
+fetch('http://localhost:3000/au', {
+    method: 'POST',
+    body: jsonData,
+    headers: { 'Content-Type': 'application/json' } // Only set this if sending JSON
+})
+.then(response => response.json())
+.then(data => console.log('Success:', data))
+.catch(error => console.error('Error:', error));
+    
+    }
+</script>
+</body>
+</html>
